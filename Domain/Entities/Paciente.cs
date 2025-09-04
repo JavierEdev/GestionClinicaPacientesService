@@ -17,11 +17,11 @@ public class Paciente
     [Column("sexo")]
     public required string Sexo { get; set; }
     [Column("direccion")]
-    public string Direccion { get; set; } = null!;
+    public string? Direccion { get; set; } = null!;
     [Column("telefono")]
     public string Telefono { get; set; } = null!;
     [Column("correo")]
-    public string Correo { get; set; } = null!;
+    public string? Correo { get; set; } = null!;
     [Column("estado_civil")]
     public string EstadoCivil { get; set; } = null!;
     public ICollection<ContactoEmergencia> ContactosEmergencia { get; set; } = new List<ContactoEmergencia>();

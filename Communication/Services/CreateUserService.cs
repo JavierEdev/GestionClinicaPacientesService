@@ -17,7 +17,7 @@ public class CreateUserService
 
     public async Task<int> ExecuteAsync(CreateUserCommand cmd, CancellationToken ct)
     {
-        var rolesValidos = new[] { "administrador", "medico", "recepcionista" };
+        var rolesValidos = new[] { "administrador", "medico", "recepcionista", "paciente" };
         if (!rolesValidos.Contains(cmd.Rol))
             throw new InvalidOperationException("Rol inválido");
 

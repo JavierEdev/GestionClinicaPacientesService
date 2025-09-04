@@ -23,7 +23,7 @@ namespace pacientes_service.Domain.Entities
         [Column("diagnostico")] 
         public string? Diagnostico { get; set; }
         [Column("descripcion")] 
-        public string Descripcion { get; set; } = null!;
+        public string? Descripcion { get; set; } = null!;
         public Paciente Paciente { get; set; } = null!;
     }
 }

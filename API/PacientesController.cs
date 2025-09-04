@@ -60,13 +60,6 @@ public class PacientesController : ControllerBase
             paciente.Telefono,
             paciente.Correo,
             paciente.EstadoCivil,
-            HistoriasClinicas = paciente.HistoriasClinicas.Select(h => new
-            {
-                h.IdHistoriaClinica,
-                h.NumeroHistoriaClinica,
-                h.FechaRegistro,
-                h.Descripcion
-            }),
             ContactosEmergencia = paciente.ContactosEmergencia.Select(c => new
             {
                 c.IdContacto,
