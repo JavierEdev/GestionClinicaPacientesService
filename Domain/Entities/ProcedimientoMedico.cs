@@ -1,15 +1,23 @@
-﻿namespace pacientes_service.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace pacientes_service.Domain.Entities
 {
+    [Table("procedimientosmedicos")]
     public class ProcedimientoMedico
     {
+        [Column("id_procedimiento")]
         public int IdProcedimiento { get; set; }
+
+        [Column("id_consulta")]
         public int IdConsulta { get; set; }
-        public int IdPaciente { get; set; }
-        public int IdMedico { get; set; }
-        public DateTime Fecha { get; set; }
-        public string Tipo { get; set; } = default!;
+
+        [Column("id_procedimiento_catalogo")]
+        public int IdProcedimientoCatalogo { get; set; }
+
+        [Column("procedimiento")]
+        public string Procedimiento { get; set; } = default!;
+
+        [Column("descripcion")]
         public string? Descripcion { get; set; }
-        public decimal? Costo { get; set; }
-        public string Estado { get; set; } = "pendiente";
     }
 }

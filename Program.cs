@@ -18,6 +18,7 @@ using Amazon.Runtime;
 using pacientes_service.Infrastructure.Storage;
 using Microsoft.OpenApi.Models;
 using pacientes_service.Domain.Entities;
+using pacientes_service.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,6 +54,8 @@ builder.Services.AddScoped<CreateEmergencyContactService>();
 builder.Services.AddScoped<UpdateEmergencyContactService>();
 builder.Services.AddScoped<CreateConsultaMedicaService>();
 builder.Services.AddScoped<GetDocumentoDownloadUrlService>();
+builder.Services.AddScoped<CatalogoProcedimientoService>();
+builder.Services.AddScoped<CreateProcedimientoMedicoService>();
 
 // Usuarios
 builder.Services.AddScoped<CreateUserService>();

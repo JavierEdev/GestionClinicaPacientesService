@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using pacientes_service.Communication.Commands;
 using pacientes_service.Communication.Contracts;
 using pacientes_service.Communication.Services;
+using pacientes_service.Domain.Entities;
 using pacientes_service.Domain.Interfaces;
 using pacientes_service.Infrastructure.MySql;
 using pacientes_service.Infrastructure.MySQL;
@@ -304,23 +305,20 @@ public class PacientesController : ControllerBase
         }
     }
 
-    [HttpPost("{idPaciente:int}/consultas/{idConsulta:int}/procedimientos")]
+    [HttpPost("consultas/{idConsulta:int}/procedimientos")]
     public async Task<IActionResult> CreateProcedimiento(
-        int idPaciente,
-        int idConsulta,
         [FromBody] CreateProcedimientoMedicoCommand cmd,
         [FromServices] CreateProcedimientoMedicoService svc,
         CancellationToken ct = default)
     {
-        if (idPaciente != cmd.IdPaciente || idConsulta != cmd.IdConsulta)
-            return BadRequest("Los ids de la ruta no coinciden con el cuerpo.");
 
-        var idProcedimiento = await svc.HandleAsync(cmd, ct);
+        // Crear el procedimiento y obtener el ID del procedimiento y la consulta
+        var (idProcedimiento, idConsulta) = await svc.HandleAsync(cmd, ct);
 
-        return CreatedAtAction(nameof(ListProcedimientosDeConsulta),
-            new { idPaciente, idConsulta },
-            new { idProcedimiento, idPaciente, idConsulta, cmd.IdMedico, cmd.Tipo, cmd.Fecha, cmd.Costo, cmd.Descripcion });
+        return Ok(new { idProcedimiento, idConsulta });
     }
+
+
 
     [HttpGet("{idPaciente:int}/consultas/{idConsulta:int}/procedimientos")]
     public async Task<IActionResult> ListProcedimientosDeConsulta(
@@ -335,25 +333,21 @@ public class PacientesController : ControllerBase
         if (pageSize <= 0 || pageSize > 200) pageSize = 50;
 
         var q = db.ProcedimientosMedicos.AsNoTracking()
-            .Where(p => p.IdPaciente == idPaciente && p.IdConsulta == idConsulta)
-            .OrderByDescending(p => p.Fecha);
+            .Where(p => p.IdConsulta == idConsulta)
+            .OrderByDescending(p => p.IdProcedimiento);
 
         var total = await q.CountAsync(ct);
         var items = await q.Skip((page - 1) * pageSize).Take(pageSize)
             .Select(p => new {
                 p.IdProcedimiento,
                 p.IdConsulta,
-                p.IdPaciente,
-                p.IdMedico,
-                p.Tipo,
-                p.Fecha,
-                p.Costo,
-                p.Descripcion,
-                p.Estado
+                p.Procedimiento,
+                p.Descripcion
             })
             .ToListAsync(ct);
 
-        return Ok(new { idPaciente, idConsulta, page, pageSize, total, items });
+        return Ok(new { idConsulta, page, pageSize, total, items });
     }
+
 
 }

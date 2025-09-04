@@ -17,6 +17,7 @@ public class AppDbContext : DbContext
     public DbSet<CitaMedica> CitasMedicas { get; set; } = null!;
     public DbSet<ConsultaMedica> ConsultasMedicas { get; set; } = null!;
     public DbSet<ProcedimientoMedico> ProcedimientosMedicos => Set<ProcedimientoMedico>();
+    public DbSet<CatalogoProcedimiento> CatalogoProcedimientos { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -198,19 +199,30 @@ public class AppDbContext : DbContext
              .OnDelete(DeleteBehavior.Restrict);
         });
 
+        modelBuilder.Entity<CatalogoProcedimiento>(e =>
+        {
+            e.ToTable("CatalogoProcedimientos");
+            e.HasKey(x => x.IdProcedimientoCatalogo);
+            e.Property(x => x.IdProcedimientoCatalogo).HasColumnName("id_procedimiento_catalogo");
+            e.Property(x => x.Codigo).HasColumnName("codigo").HasMaxLength(20).IsRequired();
+            e.Property(x => x.Nombre).HasColumnName("nombre").HasMaxLength(150).IsRequired();
+            e.Property(x => x.Descripcion).HasColumnName("descripcion");
+            e.Property(x => x.PrecioBase).HasColumnName("precio_base").HasDefaultValue(0.00m).HasColumnType("DECIMAL(10,2)");
+            e.Property(x => x.DuracionMin).HasColumnName("duracion_min");
+            e.Property(x => x.Activo).HasColumnName("activo").HasDefaultValue(true).HasColumnType("TINYINT(1)");
+            e.HasIndex(x => x.Codigo).IsUnique();
+            e.HasIndex(x => x.Nombre).HasDatabaseName("idx_catproc_nombre");
+        });
+
         modelBuilder.Entity<ProcedimientoMedico>(e =>
         {
-            e.ToTable("procedimientosmedicos");
-            e.HasKey(x => x.IdProcedimiento);
-            e.Property(x => x.IdProcedimiento).HasColumnName("id_procedimiento");
-            e.Property(x => x.IdConsulta).HasColumnName("id_consulta");
-            e.Property(x => x.IdPaciente).HasColumnName("id_paciente");
-            e.Property(x => x.IdMedico).HasColumnName("id_medico");
-            e.Property(x => x.Fecha).HasColumnName("fecha");
-            e.Property(x => x.Tipo).HasColumnName("tipo");
-            e.Property(x => x.Descripcion).HasColumnName("descripcion");
-            e.Property(x => x.Costo).HasColumnName("costo");
-            e.Property(x => x.Estado).HasColumnName("estado");
+            e.ToTable("ProcedimientosMedicos");
+            e.HasKey(p => p.IdProcedimiento);
+            e.Property(p => p.IdProcedimiento).HasColumnName("id_procedimiento");
+            e.Property(p => p.IdConsulta).HasColumnName("id_consulta");
+            e.Property(p => p.IdProcedimientoCatalogo).HasColumnName("id_procedimiento_catalogo");
+            e.Property(p => p.Procedimiento).HasColumnName("procedimiento");
+            e.Property(p => p.Descripcion).HasColumnName("descripcion");
         });
     }
 }
