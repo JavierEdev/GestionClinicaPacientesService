@@ -11,6 +11,6 @@ public class GetUserByIdService
     public async Task<UserResponse?> ExecuteAsync(int id, CancellationToken ct)
     {
         var u = await _repo.GetByIdAsync(id, ct);
-        return u is null ? null : new UserResponse { Id = u.IdUsuario, Username = u.NombreUsuario, Rol = u.Rol, IdMedico = u.IdMedico };
+        return u is null ? null : new UserResponse { Id = u.IdUsuario, Username = u.NombreUsuario, Rol = u.Rol, IdMedico = u.IdMedico, IdPaciente = u.IdPaciente };
     }
 }
