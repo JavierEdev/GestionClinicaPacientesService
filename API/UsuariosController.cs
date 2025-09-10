@@ -10,7 +10,6 @@ namespace pacientes_service.API;
 [Route("api/[controller]")]
 public class UsuariosController : ControllerBase
 {
-    [Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserResponse>>> GetAll(
         [FromQuery] int? pacienteId,
@@ -18,7 +17,6 @@ public class UsuariosController : ControllerBase
         CancellationToken ct)
         => Ok(await service.ExecuteAsync(pacienteId,ct));
 
-    [Authorize]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<UserResponse>> GetById(
         int id,
@@ -48,7 +46,6 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpPatch("{id:int}/delete")]
-    [Authorize]
     public async Task<ActionResult> SoftDelete(
         int id,
         [FromServices] SoftDeleteUserService service,

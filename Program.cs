@@ -19,6 +19,7 @@ using pacientes_service.Infrastructure.Storage;
 using Microsoft.OpenApi.Models;
 using pacientes_service.Domain.Entities;
 using pacientes_service.Services;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -67,6 +68,21 @@ builder.Services.AddScoped<SoftDeleteUserService>();
 builder.Services.AddSingleton<ISecurePasswordHasher, BcryptPasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<AuthService>(); // usado por AuthController
+
+const string CorsPolicy = "SpaDev";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: CorsPolicy, policy =>
+        policy
+            .WithOrigins(
+                "http://localhost:5173", "http://127.0.0.1:5173",
+                "http://localhost:4173", "http://127.0.0.1:4173"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+    );
+});
 
 // JWT (opcional: comenta esta sección si aún no usarás login)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -152,6 +168,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(CorsPolicy);
 
 using (var scope = app.Services.CreateScope())
 {
