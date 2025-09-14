@@ -1,4 +1,5 @@
-﻿using pacientes_service.Domain.Interfaces;
+﻿using pacientes_service.Domain.Entities;
+using pacientes_service.Domain.Interfaces;
 
 namespace pacientes_service.Communication.Services
 {
@@ -12,5 +13,6 @@ namespace pacientes_service.Communication.Services
             var (items, total) = await _repo.GetAllAsync(page, pageSize, ct);
             return new { page, pageSize, total, items };
         }
+        public Task<AntecedenteMedico?> GetByPacienteAsync(int idPaciente, CancellationToken ct = default) => _repo.GetRegistroParaUpsertAsync(idPaciente);
     }
 }

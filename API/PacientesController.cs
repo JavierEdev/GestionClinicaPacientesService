@@ -81,15 +81,15 @@ public class PacientesController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("antecedentes-medicos")]
-    public async Task<IActionResult> GetAntecedentesMedicos(
-    [FromServices] pacientes_service.Communication.Services.ListAntecedentesMedicosService svc,
-    [FromQuery] int page = 1,
-    [FromQuery] int pageSize = 50,
-    CancellationToken ct = default)
+    [HttpGet("pacientes/{idPaciente:int}/antecedentes-medicos")]
+    public async Task<IActionResult> GetAntecedentesMedicosDePaciente(
+        [FromServices] pacientes_service.Communication.Services.ListAntecedentesMedicosService svc,
+        [FromRoute] int idPaciente,
+        CancellationToken ct = default)
     {
-        var result = await svc.HandleAsync(page, pageSize, ct);
-        return Ok(result);
+        var item = await svc.GetByPacienteAsync(idPaciente, ct);
+        if (item is null) return NotFound();
+        return Ok(item);
     }
 
     [HttpPut("{idPaciente:int}/informacion-medica-inicial")]
