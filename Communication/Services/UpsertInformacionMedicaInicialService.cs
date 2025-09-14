@@ -71,10 +71,6 @@ namespace pacientes_service.Communication.Services
                 await _repo.UpdateAsync(reg);
             }
 
-            // 3) Commit si usas UoW
-            if (_uow is not null)
-                await _uow.CommitAsync(ct);
-
             return reg.IdAntecedente;
         }
     }
