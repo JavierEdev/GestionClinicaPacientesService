@@ -341,6 +341,33 @@ public class PacientesController : ControllerBase
 
         return Ok(new { idConsulta, page, pageSize, total, items });
     }
+    [HttpGet("dpi/{dpi}")]
+    public async Task<IActionResult> GetByDpi(string dpi, CancellationToken ct)
+    {
+        var paciente = await _repo.GetByDpiAsync(dpi, ct);
+        if (paciente == null)
+            return NotFound(new { error = "Paciente no encontrado" });
 
+        return Ok(new
+        {
+            paciente.IdPaciente,
+            paciente.Nombres,
+            paciente.Apellidos,
+            paciente.Dpi,
+            paciente.FechaNacimiento,
+            paciente.Sexo,
+            paciente.Direccion,
+            paciente.Telefono,
+            paciente.Correo,
+            paciente.EstadoCivil,
+            ContactosEmergencia = paciente.ContactosEmergencia.Select(c => new
+            {
+                c.IdContacto,
+                c.Nombre,
+                c.Parentesco,
+                c.Telefono
+            })
+        });
+    }
 
 }

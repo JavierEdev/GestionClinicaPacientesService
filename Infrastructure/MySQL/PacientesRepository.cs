@@ -67,5 +67,15 @@ namespace pacientes_service.Infrastructure.MySql
 
             return (items, total);
         }
+        public async Task<Paciente?> GetByDpiAsync(string dpi, CancellationToken ct = default)
+        {
+            var norm = (dpi ?? string.Empty).Trim().Replace("-", "").Replace(" ", "");
+            if (string.IsNullOrWhiteSpace(norm)) return null;
+
+            return await _db.Pacientes
+                .AsNoTracking()
+                .Include(p => p.ContactosEmergencia)
+                .FirstOrDefaultAsync(p => p.Dpi == norm, ct);
+        }
     }
 }
